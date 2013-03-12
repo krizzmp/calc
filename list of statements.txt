@@ -1,0 +1,25 @@
+plus	: +
+minus	: -
+times	: *
+divide	: /
+equals	: =
+l_paren	: (
+r_paren	: )
+name	: [a-zA-Z_][a-zA-Z0-9_]*
+number	: [0-9]+
+
+
+statement:name equals exp
+
+exp: exp plus exp
+exp: exp minus exp
+exp: exp times exp
+exp: exp divide exp
+
+exp: number
+exp: name
+
+statement:exp
+
+statement:solve( exp , name)
+
