@@ -1,48 +1,53 @@
 #!/usr/bin/env python
-"""An example demonstrating usage of latexmath2png module for embedding math
-equations in PyGTK
- 
-Author: Kamran Riaz Khan <krkhan@inspirated.com>
+"""an attempt to create the interface for calc
+Author: Kristoffer Petersen <krizzmp@gmail.com>
 """
  
 from gi.repository import Gtk
+import os
+import latexmath2png
 
 class mathline(Gtk.EventBox):
 	"""docstring for mathline"""
-	editbox=None
-	editimg=None
-	resultimg=None
-	button=None
 	def __init__(self):
 		super(mathline, self).__init__()
 		self.connect("enter-notify-event", self.enter)
-		self.connect("leave-notify-event", self.leave)
-		self.editbox=Gtk.Entry()
-		#self.editbox.connect("leave-notify-event", self.leave)
-		self.button = Gtk.Button("Hello World")
-		self.button2 = Gtk.Button("Hello World")
-		#self.button2.connect("enter-notify-event", self.enter)
-
+		
 		self.line=Gtk.HBox()
-		self.line.pack_start(self.button2,True,True,0)
-		self.line.pack_end(self.button,True,True,0)
+		self.btn=Gtk.Image.new_from_file("none")
+		self.line.add(self.btn)
+		self.edit=Gtk.Entry()
+		self.edit.connect("focus-out-event", self.updateimg)
+		self.line.add(self.edit)
+		self.btn.hide()
 		self.add(self.line)
-		self.editbox.show()
+		self.line.show()
+		self.edit.show()
+		self.show()
+
 
 	def enter(self,g,h):
-		print "foo"
-		self.line.remove(self.button2)
-		self.line.pack_start(self.editbox,True,True,0)
-		
+		for x in test:
+			if x!=self and not x.edit.is_focus():
+				x.edit.hide()
+				x.btn.show()
+		self.edit.show()
+		self.btn.hide()
+	
+	def updateimg(self,g,h):
+		if self.edit.get_text():
+			latexmath2png.math2png([self.edit.get_text()], os.getcwd(), prefix = "pre")
+			self.btn.set_from_file('pre1.png')
+		self.btn.show()
+		self.edit.hide()
 
-	def leave(self,g,h):
-		print "left"
-		if self.editbox.has
-		self.line.remove(self.editbox)
-		self.line.pack_start(self.button2,True,True,0)
 
  
 def window_destroy(widget):
+	try:
+		os.unlink(os.path.join(os.getcwd(), 'pre1.png' ))
+	except:
+		print "boo"
 	Gtk.main_quit()
 
 
@@ -51,27 +56,22 @@ window.set_border_width(10)
 window.set_title('LaTeX Equations in GTK')
 window.connect('destroy', window_destroy)
 
-# grid = Gtk.Grid()
-# window.add(grid)
+def teste(self):
+	test[0].createimg()
 
-# k=['1','2','3','4']
-
-# for i, string in enumerate(k):
-# 	button1 = Gtk.Button(label=string)
-# 	button2 = Gtk.Button(label=string+'2')
-# 	button1.set_hexpand ( True)
-# 	grid.attach(button1, 1, i, 1, 1)
-# 	grid.attach(button2, 2, i, 1, 1)
-def testing(self):
-	print 2
-test=mathline()
-test2=mathline()
+test=[]
+test.append(mathline())
+test.append(mathline())
 thing=Gtk.VBox()
-thing.add(test)
-thing.add(test2)
-thing.connect('destroy',testing)
+thing.add(test[0])
+thing.add(test[1])
+btnimg=Gtk.Button('create img')
+btnimg.connect('clicked',teste)
+btnimg.show()
+thing.add(btnimg)
+thing.show()
 window.add(thing)
 
  
-window.show_all()
+window.show()
 Gtk.main()
